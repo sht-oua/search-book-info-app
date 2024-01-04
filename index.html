@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./css/global.css">
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+    <link rel="manifest" href="./manifest.json" crossorigin="use-credentials" />
+    <script async src="https://cdn.jsdelivr.net/npm/pwacompat@2.0.9/pwacompat.min.js"
+          integrity="sha384-VcI6S+HIsE80FVM1jgbd6WDFhzKYA0PecD/LcIyMQpT4fMJdijBh0I7Iblaacawc"
+          crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>書籍情報検索</title>
+</head>
+<body> 
+    <div id="app" v-cloak> 
+        <div class="header">
+            <div>書籍情報検索</div>
+        </div>
+        <div class="searchAreaWrapper">
+            <div class="searchArea">
+                <input type="radio" id="simpleSearch" name="tabItem" checked />
+                <label class="tabItem" for="simpleSearch">基本検索</label>
+                <input type="radio" id="advancedSearch" name="tabItem" />
+                <label class="tabItem" for="advancedSearch">詳細検索</label>
+                <div class="tabContent" id="simpleSearchContent">
+                    <div class="searchBar">
+                        <input type="text" placeholder="キーワードを入力" class="txtBox" v-model="inputKeyword" />
+                        <button id="simpleSearchBtn" class="primaryBtn btn" @click="simpleSearch">検索</button>
+                        <button class="primaryBtn btn clearBtn" @click="clearForm">クリア</button>
+                    </div>
+                </div>
+                <div class="tabContent" id="advancedSearchContent">
+                    <div class="searchForm mb15">
+                        <div class="labelWrapper">
+                            <label>タイトル</label>
+                        </div>
+                        <div class="formWrapper">
+                            <input type="text" class="txtBox" v-model="inputTitle" />
+                        </div>
+                    </div>
+                    <div class="searchForm mb15">
+                        <div class="labelWrapper">
+                            <label>著者名</label>
+                        </div>
+                        <div class="formWrapper">
+                            <input type="text" class="txtBox" v-model="inputAuthor" />
+                        </div>
+                    </div>
+                    <div class="searchForm mb15">
+                        <div class="labelWrapper">
+                            <label>出版社</label>
+                        </div>
+                        <div class="formWrapper">
+                            <input type="text" class="txtBox" list="publisherList" v-model="inputPublisherName" />
+                            <datalist id="publisherList">
+                                <option v-for="favPublisher in favPublisherList" :key="favPublisher" :value="favPublisher"></option>
+                            </datalist>
+                        </div>
+                    </div>
+                    <div class="searchForm mb15">
+                        <div class="labelWrapper">
+                            <label>サイズ</label>
+                        </div>
+                        <div class="formWrapper">
+                            <select class="selBox" v-model="selectedSize">
+                                <option value="" selected>-</option>
+                                <option v-for="size in sizeList"
+                                    :key="size.id" :value="size.id">
+                                    {{ size.name }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="searchForm mb15">
+                        <div class="labelWrapper">
+                            <label>ジャンル</label>
+                        </div>
+                        <div class="formWrapper">
+                            <select class="selBox" v-model="selectedGenre">
+                                <option value="" selected>-</option>
+                                <option v-for="genre in genreList"
+                                    :key="genre.id" :value="genre.id">
+                                    {{ genre.name }}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="advancedSearchBtnArea">
+                        <button id="advancedSearchBtn" class="btn primaryBtn" @click="advancedSearch">検索</button>
+                        <button class="primaryBtn btn clearBtnForAdvanced" @click="clearForm">クリア</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="resultAreaWrapper" v-if="bookInfoList.length != 0 && searchEndFlg">
+            <div class="resultAreaBar">検索結果（{{ hits }}件）</div>
+            <div class="resultArea">
+                <template v-for="(bookInfo, index) in bookInfoList">
+                    <div class="resultContent">
+                        <div class="coverImage">
+                            <img :src="bookInfo.largeImageUrl">
+                        </div>
+                        <div class="bookInfo">
+                            <a class="title" href="javascript:void(0);" @click="openModal(index)">{{ bookInfo.viewTitle }}</a>
+                            <div class="author">{{ bookInfo.viewAuthor }}</div>
+                            <div class="publisher">{{ bookInfo.publisherName }}</div>
+                            <div class="price">{{ bookInfo.itemPrice }}</div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+        <div class="resultAreaWrapper" v-if="!initialFlg && searchEndFlg && bookInfoList.length == 0">
+            <div class="resultAreaBar">検索結果（0件）</div>
+            <div class="resultArea"></div>
+        </div>
+        <template v-for="(bookInfo, index) in bookInfoList">
+        <div class="bookInfoModal" v-bind:class="['js-modal-' + index]">
+            <div class="modalContainer">
+                <div class="modalContent">
+                    <div class="modal-coverImage">
+                        <img :src="bookInfo.modalLargeImageUrl">
+                    </div>
+                    <div class="modal-overview">
+                        <div class="modal-titleAndAuthor">
+                            <a :href="bookInfo.itemUrl" target="_blank">{{ bookInfo.title }}　{{ bookInfo.subTitle }}</a>
+                        </div>
+                        <div class="modal-bookDetail mb15">
+                            <table>
+                                <tr>
+                                    <th>著者名</th>
+                                    <td>{{ bookInfo.author }}</td>
+                                </tr>
+                                <tr>
+                                    <th>出版社</th>
+                                    <td>{{ bookInfo.publisherName }}</td>
+                                </tr>
+                                <tr>
+                                    <th>レーベル</th>
+                                    <td>{{ bookInfo.seriesName }}</td>
+                                </tr>
+                                <tr>
+                                    <th>発売日</th>
+                                    <td>{{ bookInfo.salesDate }}</td>
+                                </tr>
+                                <tr>
+                                    <th>価格</th>
+                                    <td>{{ bookInfo.itemPrice }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="modal-caption mb15">
+                            {{ bookInfo.itemCaption }}
+                        </div>
+                        <div class="modal-close-btn">
+                            <button class="btn primaryBtn" @click="closeModal(index)">閉じる</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </template>
+    </div>
+    <script src="./js/main.js"></script>
+</body>
+</html>
