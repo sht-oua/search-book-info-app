@@ -1,4 +1,3 @@
-Vue.config.devtools = false
 const { createApp } = Vue
 
 createApp({
