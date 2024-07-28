@@ -125,7 +125,12 @@
                     </div>
                     <div class="modal-overview">
                         <div class="modal-titleAndAuthor">
-                            <a :href="bookInfo.itemUrl" target="_blank">{{ bookInfo.title }}　{{ bookInfo.subTitle }}</a>
+                            <a :href="bookInfo.itemUrl" target="_blank">
+                                {{ bookInfo.title }}
+                                <template v-if="bookInfo.subTitle !== null">
+                                    　{{ bookInfo.subTitle }}
+                                </template>
+                            </a>
                         </div>
                         <div class="modal-bookDetail mb15">
                             <table>
