@@ -127,7 +127,7 @@
                         <div class="modal-titleAndAuthor">
                             <a :href="bookInfo.itemUrl" target="_blank">
                                 {{ bookInfo.title }}
-                                <template v-if="bookInfo.subTitle !== null">
+                                <template v-if="!bookInfo.subTitle">
                                     &emsp;{{ bookInfo.subTitle }}
                                 </template>
                             </a>
