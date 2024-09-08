@@ -379,3 +379,7 @@ a:visited {
     border-bottom: 1px solid #6c6c6c;
     color: #c1c1c1;
 }
+
+.modal-caption {
+    color: #c1c1c1;
+}
