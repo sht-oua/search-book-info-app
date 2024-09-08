@@ -71,6 +71,10 @@ input[name="tabItem"] {
     overflow: hidden;
 }
 
+#advancedSearchContent {
+    color: #fff;
+}
+
 #simpleSearch:checked ~ #simpleSearchContent,
 #advancedSearch:checked ~ #advancedSearchContent {
     display: block;
@@ -86,6 +90,7 @@ input[name="tabItem"] {
 }
 
 .txtBox {
+    background-color: #1c1c1e;
     min-width: 45%;
     border: 1px solid #2dacbd;
     border-radius: 3px;
@@ -94,6 +99,7 @@ input[name="tabItem"] {
     font-size: 16px;
     vertical-align: middle;
     margin: 1px;
+    color: #fff;
 }
 
 .txtBox::placeholder {
@@ -101,6 +107,7 @@ input[name="tabItem"] {
 }
 
 .selBox {
+    background-color: #1c1c1e;
     min-width: 270px;
     border: 1px solid #2dacbd;
     border-radius: 3px;
@@ -109,6 +116,7 @@ input[name="tabItem"] {
     font-size: 16px;
     vertical-align: middle;
     margin: 1px;
+    color: #fff;
 }
 
 #simpleSearchContent {
@@ -236,7 +244,7 @@ input[name="tabItem"] {
 }
 
 .coverImage {
-    border: 1px solid #ccc;
+    border: 1px solid #6c6c6c;
     width: 100px;
     height: 100px;
     aspect-ratio: 1/1;
@@ -339,7 +347,7 @@ a:visited {
 }
   
 .modal-coverImage {
-    border: 1px solid #ccc;
+    border: 1px solid #6c6c6c;
     width: 250px;
     height: 250px;
     aspect-ratio: 1/1;
@@ -368,6 +376,6 @@ a:visited {
 }
 
 .modal-bookDetail table tr {
-    border-bottom: 1px solid #cccccc;
+    border-bottom: 1px solid #6c6c6c;
     color: #c1c1c1;
 }
